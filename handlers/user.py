@@ -14,9 +14,7 @@ user_router = Router()
 
 @user_router.message(CommandStart())
 async def process_start_command(message: Message, db: dict):
-    if message.from_user.id not in db["users"]:
-        db["users"][message.from_user.id] = deepcopy(db["user_status"])
-    print(db)
+    db["users"][message.from_user.id] = deepcopy(db["user_status"])
     await message.answer(
         text=LEXICON_COMMANDS[message.text],
         reply_markup = create_play_finish_keyboard(finish = False)
@@ -94,18 +92,20 @@ async def process_board_appointment(message: Message, db: dict):
     db['users'][message.from_user.id]['game_board'] = keyboard
     db['users'][message.from_user.id]['balance'] -= index['cost']
     if db['users'][message.from_user.id]['balance'] < 0:
+        db["users"][message.from_user.id]["in_game"] = False
         await message.answer(
         text="Упс! Кажется у тебя не хваатет денег.\nЧтобы начать игру снова нажми /start",
-        reply_markup=InlineKeyboardMarkup(inline_keyboard = keyboard)
-    )
-    await message.answer(
-        text=f"Ты в игре. Баланс: {db['users'][message.from_user.id]['balance']}",
-        reply_markup=InlineKeyboardMarkup(inline_keyboard = keyboard)
-    )
-    await message.answer(
-        text = LEXICON['under_board_text'],
         reply_markup=ReplyKeyboardRemove()
     )
+    else:
+        await message.answer(
+            text=f"Ты в игре. Баланс: {db['users'][message.from_user.id]['balance']}",
+            reply_markup=InlineKeyboardMarkup(inline_keyboard = keyboard)
+        )
+        await message.answer(
+            text = LEXICON['under_board_text'],
+            reply_markup=ReplyKeyboardRemove()
+        )
     #print(db)
 
 
@@ -186,10 +186,10 @@ async def process_balance_upgrade(callback: CallbackQuery, db: dict, main_bot):
         reply_markup=InlineKeyboardMarkup(inline_keyboard = db['users'][callback.from_user.id]['game_board'])
     )
 
-    if db['users'][callback.from_user.id]['balance'] >= 3000:
-        await main_bot.send_animation(
+    if db['users'][callback.from_user.id]['balance'] >= 1500:
+        await main_bot.send_sticker(
             chat_id = callback.from_user.id,
-            animation = random.choice(GIFS['win'])
+            sticker = random.choice(GIFS['ok'])
         )
         await main_bot.send_message(
             chat_id = callback.from_user.id,

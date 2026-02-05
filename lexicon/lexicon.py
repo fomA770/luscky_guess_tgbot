@@ -66,7 +66,7 @@ GIFS = {
         "CAACAgIAAxkBAAM7aYJUm2LSZhpNKMkdKITAp2NPnrYAAv4ZAAJNqgFIEXFO1SWWME44BA",
         "CAACAgIAAxkBAAM6aYJUEfJxs7mQss40fc-Q66NM1hkAArohAAIW-LFK-ckxDl_vNyQ4BA"
     ],
-    'win': "CgACAgIAAxkBAAIBvmmCX3LQrkvleizoLtdomXoFdlD3AAJ0RwACDb04S-Ksu9xm4Sh7OAQ",
+    'win': "AgADdEcAAg29OEs",
 }
 
 #print(len(LEXICON_COMMANDS['/rules']))
